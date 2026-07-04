@@ -1,0 +1,29 @@
+{
+  "name": "home-material",
+  "appid": "__UNI__HOMEMAT",
+  "description": "家装选材避坑助手",
+  "versionName": "1.0.0",
+  "versionCode": 100,
+  "transformPx": false,
+  "vueVersion": "3",
+  "mp-weixin": {
+    "appid": "your-mp-weixin-appid",
+    "setting": {
+      "urlCheck": false,
+      "es6": true,
+      "postcss": true,
+      "minified": true
+    },
+    "usingComponents": false
+  },
+  "h5": {
+    "devServer": {
+      "proxy": {
+        "/api": {
+          "target": "http://localhost:8090",
+          "changeOrigin": true
+        }
+      }
+    }
+  }
+}

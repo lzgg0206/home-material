@@ -27,7 +27,8 @@ public class SaTokenConfig implements WebMvcConfigurer {
               "/api/brand/**",
               "/api/model/**",
               "/api/search/**",
-              "/api/auth/**"
+              "/api/auth/login",
+              "/api/auth/wx-login"
           ).check(r -> StpUtil.checkLogin());
       // B 端：全部需登录
       SaRouter.match("/admin/**").check(r -> StpUtil.checkLogin());
