@@ -7,19 +7,19 @@
     </view>
 
     <view class="grid">
-      <view class="grid-item" @click="go('/pages/profile/profile')">
+      <view class="grid-item tap" @click="go('/pages/profile/profile')">
         <view class="grid-name">家装档案</view>
         <view class="meta">编辑房屋/预算/偏好</view>
       </view>
-      <view class="grid-item" @click="switchTab('/pages/list/list')">
+      <view class="grid-item tap" @click="switchTab('/pages/list/list')">
         <view class="grid-name">选材清单</view>
         <view class="meta">管理已选型号</view>
       </view>
-      <view class="grid-item" @click="go('/pages/search/search')">
+      <view class="grid-item tap" @click="go('/pages/search/search')">
         <view class="grid-name">搜索</view>
         <view class="meta">品牌/型号/避坑</view>
       </view>
-      <view class="grid-item" @click="switchTab('/pages/index/index')">
+      <view class="grid-item tap" @click="switchTab('/pages/index/index')">
         <view class="grid-name">回到首页</view>
         <view class="meta">榜单与避坑</view>
       </view>
@@ -58,10 +58,11 @@ onShow(load)
 .grid { display: flex; flex-wrap: wrap; justify-content: space-between; }
 .grid-item {
   width: 48%;
-  background: #fff;
-  border-radius: 16rpx;
+  background: var(--color-card);
+  border-radius: var(--radius-card);
   padding: 32rpx 24rpx;
   margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.03);
 }
 .grid-name { font-size: 30rpx; font-weight: 500; margin-bottom: 8rpx; }
 </style>

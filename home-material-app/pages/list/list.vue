@@ -1,6 +1,8 @@
 <template>
   <view class="container">
-    <view v-if="!items.length" class="empty">清单还是空的，去首页加些型号吧</view>
+    <view v-if="!items.length" class="empty">
+      <view class="empty-icon"></view>清单还是空的，去首页加些型号吧
+    </view>
 
     <view v-for="it in items" :key="it.id" class="section item">
       <view class="item-name">{{ it.modelName || '自定义型号' }}</view>
@@ -54,19 +56,22 @@ onShow(load)
 .status {
   float: right;
   font-size: 24rpx;
-  color: #07c160;
-  background: #f0faf3;
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
   padding: 2rpx 12rpx;
   border-radius: 8rpx;
 }
 .budget-bar {
   position: fixed;
-  left: 0; right: 0; bottom: 0;
+  left: 0; right: 0;
+  /* 贴在 tabBar 上方：tabBar 高度约 100rpx + 底部安全区 */
+  bottom: calc(100rpx + env(safe-area-inset-bottom));
   background: #fff;
   padding: 24rpx;
   border-top: 1rpx solid #eee;
   display: flex;
   justify-content: space-between;
   font-size: 28rpx;
+  box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.03);
 }
 </style>

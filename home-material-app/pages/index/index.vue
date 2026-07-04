@@ -6,7 +6,7 @@
         <view
           v-for="c in home.quickCategories"
           :key="c.id"
-          class="cate-item"
+          class="tag tap cate-pill"
           @click="goCategory(c.id)"
         >{{ c.name }}</view>
       </scroll-view>
@@ -14,10 +14,12 @@
 
     <view v-for="r in home.topRankings" :key="r.categoryId" class="section">
       <view class="title">{{ r.categoryName }} TOP3</view>
-      <view v-for="b in r.top3" :key="b.brandId" class="brand-card">
-        <text class="rank">{{ b.rank }}</text>
-        <text class="brand-name">{{ b.name }}</text>
-        <text class="meta">好评 {{ b.praiseRate }}% · 踩坑 {{ b.pitfallCount }}</text>
+      <view v-for="b in r.top3" :key="b.brandId" class="brand-card tap" @click="goModel(b.brandId)">
+        <text :class="['rank', 'rank-' + b.rank]">{{ b.rank }}</text>
+        <view class="brand-info">
+          <text class="brand-name">{{ b.name }}</text>
+          <view class="meta">好评 {{ b.praiseRate }}% · 踩坑 {{ b.pitfallCount }}</view>
+        </view>
       </view>
     </view>
 
@@ -26,14 +28,16 @@
       <view
         v-for="p in home.dailyPitfalls"
         :key="p.modelId"
-        class="pit-card"
+        class="pit-card tap"
         @click="goModel(p.modelId)"
       >
         <view class="pit-tag">{{ p.categoryName }}</view>
         <view class="pit-desc">{{ p.description }}</view>
         <view class="meta">{{ p.modelName }} · {{ p.count }} 人反馈</view>
       </view>
-      <view v-if="!home.dailyPitfalls || !home.dailyPitfalls.length" class="empty">暂无内容</view>
+      <view v-if="!home.dailyPitfalls || !home.dailyPitfalls.length" class="empty">
+        <view class="empty-icon"></view>暂无避坑精选
+      </view>
     </view>
   </view>
 </template>
@@ -54,47 +58,43 @@ const load = async () => {
 }
 
 const goModel = (id) => uni.navigateTo({ url: `/pages/model/detail?id=${id}` })
-const goCategory = (id) => uni.showToast({ title: '品类 ' + id, icon: 'none' })
+const goCategory = (id) => uni.navigateTo({ url: `/pages/brand/ranking?categoryId=${id}` })
 
 onShow(load)
 </script>
 
 <style scoped>
 .cate-list { white-space: nowrap; }
-.cate-item {
-  display: inline-block;
-  padding: 12rpx 28rpx;
-  margin-right: 16rpx;
-  background: #f0faf3;
-  color: #07c160;
-  border-radius: 32rpx;
-  font-size: 28rpx;
-}
+.cate-pill { display: inline-block; padding: 12rpx 28rpx; margin-right: 16rpx; font-size: 28rpx; }
 .brand-card {
   display: flex;
   align-items: center;
   padding: 16rpx 0;
-  border-bottom: 1rpx solid #f0f0f0;
+  border-bottom: 1rpx solid var(--color-border);
 }
 .brand-card:last-child { border-bottom: none; }
+.brand-info { flex: 1; }
+.brand-name { font-size: 30rpx; font-weight: 500; }
 .rank {
   width: 48rpx;
   height: 48rpx;
   line-height: 48rpx;
   text-align: center;
-  background: #ffeb3b;
   border-radius: 50%;
   margin-right: 20rpx;
   font-weight: 600;
+  color: #fff;
 }
-.brand-name { flex: 1; }
-.pit-card { padding: 16rpx 0; border-bottom: 1rpx solid #f0f0f0; }
+.rank-1 { background: #faad14; }
+.rank-2 { background: #bfbfbf; }
+.rank-3 { background: #d48806; }
+.pit-card { padding: 16rpx 0; border-bottom: 1rpx solid var(--color-border); }
 .pit-card:last-child { border-bottom: none; }
 .pit-tag {
   display: inline-block;
   font-size: 22rpx;
-  color: #e64340;
-  background: #fdecec;
+  color: var(--color-danger);
+  background: var(--color-danger-bg);
   padding: 4rpx 12rpx;
   border-radius: 8rpx;
   margin-bottom: 8rpx;

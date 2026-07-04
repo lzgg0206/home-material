@@ -29,11 +29,25 @@
           {{ p.description }}
           <text class="meta">（{{ p.count }} 人反馈）</text>
         </view>
-        <view class="advice" v-if="p.advice">💡 避坑建议：{{ p.advice }}</view>
+        <view class="advice" v-if="p.advice">
+          <text class="advice-label">避坑建议</text>{{ p.advice }}
+        </view>
       </view>
     </view>
   </view>
-  <view v-else class="empty">加载中...</view>
+
+  <view v-else class="container">
+    <view class="section">
+      <view class="skeleton skeleton-line"></view>
+      <view class="skeleton skeleton-line short"></view>
+      <view class="skeleton skeleton-line"></view>
+    </view>
+    <view class="section">
+      <view class="skeleton skeleton-line"></view>
+      <view class="skeleton skeleton-line"></view>
+      <view class="skeleton skeleton-line short"></view>
+    </view>
+  </view>
 </template>
 
 <script setup>
@@ -52,24 +66,15 @@ onLoad((q) => {
 .d-name { font-size: 36rpx; font-weight: 600; }
 .repu { margin-top: 12rpx; font-size: 28rpx; }
 .tags { margin-top: 16rpx; }
-.tag {
-  display: inline-block;
-  font-size: 24rpx;
-  padding: 4rpx 16rpx;
-  margin-right: 12rpx;
-  background: #f0faf3;
-  color: #07c160;
-  border-radius: 8rpx;
-}
-.kw-line { display: flex; justify-content: space-between; padding: 12rpx 0; border-bottom: 1rpx solid #f0f0f0; }
+.kw-line { display: flex; justify-content: space-between; padding: 12rpx 0; border-bottom: 1rpx solid var(--color-border); }
 .kw-line:last-child { border-bottom: none; }
 .kw { font-weight: 500; }
-.pit { padding: 16rpx 0; border-bottom: 1rpx solid #f0f0f0; }
+.pit { padding: 16rpx 0; border-bottom: 1rpx solid var(--color-border); }
 .pit:last-child { border-bottom: none; }
 .risk-tag {
   font-size: 22rpx;
   color: #fff;
-  background: #e64340;
+  background: var(--color-danger);
   padding: 2rpx 12rpx;
   border-radius: 8rpx;
   margin-right: 8rpx;
@@ -77,9 +82,20 @@ onLoad((q) => {
 .advice {
   margin-top: 8rpx;
   font-size: 26rpx;
-  color: #07c160;
-  background: #f0faf3;
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
   padding: 12rpx;
   border-radius: 8rpx;
+  line-height: 1.5;
+}
+.advice-label {
+  display: inline-block;
+  font-size: 22rpx;
+  color: var(--color-primary);
+  background: #fff;
+  padding: 2rpx 12rpx;
+  border-radius: 8rpx;
+  margin-right: 8rpx;
+  font-weight: 500;
 }
 </style>
