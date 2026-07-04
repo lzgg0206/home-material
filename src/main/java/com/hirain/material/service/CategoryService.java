@@ -18,6 +18,9 @@ import java.util.stream.Collectors;
 @Service
 public class CategoryService {
 
+  /** 根父ID：parent_id 为此值（或 null）的视为一级品类。 */
+  private static final Long ROOT_PARENT_ID = 0L;
+
   @Autowired
   private CategoryMapper categoryMapper;
 
@@ -30,8 +33,8 @@ public class CategoryService {
     List<Category> all = categoryMapper.selectList(
         Wrappers.<Category>lambdaQuery().orderByAsc(Category::getSort));
     Map<Long, List<Category>> byParent = all.stream()
-        .collect(Collectors.groupingBy(c -> c.getParentId() == null ? 0L : c.getParentId()));
-    return byParent.getOrDefault(0L, List.of()).stream()
+        .collect(Collectors.groupingBy(c -> c.getParentId() == null ? ROOT_PARENT_ID : c.getParentId()));
+    return byParent.getOrDefault(ROOT_PARENT_ID, List.of()).stream()
         .map(c -> toNode(c, byParent))
         .toList();
   }

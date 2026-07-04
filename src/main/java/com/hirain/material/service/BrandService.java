@@ -30,6 +30,12 @@ import java.util.stream.Collectors;
 @Service
 public class BrandService {
 
+  /** 经济档价格上限（含）。 */
+  private static final BigDecimal PRICE_ECONOMIC_MAX = new BigDecimal("1000");
+
+  /** 品质档价格上限（含）。 */
+  private static final BigDecimal PRICE_QUALITY_MAX = new BigDecimal("5000");
+
   @Autowired
   private BrandMapper brandMapper;
 
@@ -51,9 +57,11 @@ public class BrandService {
     String dim = StrUtil.isBlank(q.getDimension()) ? "overall" : q.getDimension();
 
     LambdaQueryWrapper<Brand> w = Wrappers.<Brand>lambdaQuery()
-        .like(StrUtil.isNotBlank(cid), Brand::getMainCategoryIds, cid)
         .eq(StrUtil.isNotBlank(q.getOrigin()), Brand::getOrigin, q.getOrigin());
-    // 高端榜只看高端品牌
+    // 用 FIND_IN_SET 精确匹配逗号分隔的品类ID，避免 LIKE 把 cid=1 误匹配到 10/11
+    if (StrUtil.isNotBlank(cid)) {
+      w.apply("FIND_IN_SET({0}, main_category_ids)", cid);
+    }
     if ("highend".equals(dim)) {
       w.eq(Brand::getTier, "high");
     }
@@ -89,8 +97,8 @@ public class BrandService {
       return List.of();
     }
     Map<Long, ModelReputation> repMap = reputationMapper.selectList(
-        Wrappers.<ModelReputation>lambdaQuery()
-            .in(ModelReputation::getModelId, models.stream().map(Model::getId).toList()))
+            Wrappers.<ModelReputation>lambdaQuery()
+                .in(ModelReputation::getModelId, models.stream().map(Model::getId).toList()))
         .stream().collect(Collectors.toMap(ModelReputation::getModelId, Function.identity()));
     return models.stream().map(m -> {
       ModelSimpleVO vo = new ModelSimpleVO();
@@ -109,10 +117,10 @@ public class BrandService {
       return;
     }
     switch (range) {
-      case "economic" -> w.lt(Brand::getPriceMin, new BigDecimal("1000"));
-      case "quality" -> w.ge(Brand::getPriceMin, new BigDecimal("1000"))
-          .lt(Brand::getPriceMin, new BigDecimal("5000"));
-      case "high" -> w.ge(Brand::getPriceMin, new BigDecimal("5000"));
+      case "economic" -> w.lt(Brand::getPriceMin, PRICE_ECONOMIC_MAX);
+      case "quality" -> w.ge(Brand::getPriceMin, PRICE_ECONOMIC_MAX)
+          .lt(Brand::getPriceMin, PRICE_QUALITY_MAX);
+      case "high" -> w.ge(Brand::getPriceMin, PRICE_QUALITY_MAX);
       default -> { /* 全部 */ }
     }
   }
@@ -125,7 +133,13 @@ public class BrandService {
     }
   }
 
-  private List<String> buildTags(Brand b) {
+  /**
+   * 生成品牌展示标签（档位 + 产地 + 好评率）。
+   *
+   * @param b 品牌
+   * @return 标签列表
+   */
+  List<String> buildTags(Brand b) {
     List<String> tags = new ArrayList<>();
     String tier = b.getTier();
     tags.add("high".equals(tier) ? "高端品质"

@@ -7,6 +7,7 @@ import com.hirain.material.mapper.UserMapper;
 import com.hirain.material.vo.LoginVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 认证业务：Mock 登录 + 微信登录 + 当前用户。
@@ -26,6 +27,7 @@ public class AuthService {
    * @param openid 微信 openid
    * @return 登录响应
    */
+  @Transactional
   public LoginVO login(String openid) {
     User user = getOrCreate(openid);
     StpUtil.login(user.getId());

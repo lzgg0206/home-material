@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -68,6 +69,7 @@ public class SelectionService {
   }
 
   /** 新建清单 */
+  @Transactional
   public SelectionList createList(SelectionList list) {
     list.setUserId(authService.currentUser().getId());
     listMapper.insert(list);
@@ -87,6 +89,7 @@ public class SelectionService {
   }
 
   /** 新增清单项（自动算小计 = 数量 × 单价） */
+  @Transactional
   public SelectionItem addItem(Long listId, SelectionItem item) {
     item.setListId(listId);
     recalcTotal(item);
@@ -95,6 +98,7 @@ public class SelectionService {
   }
 
   /** 修改清单项 */
+  @Transactional
   public SelectionItem updateItem(Long itemId, SelectionItem item) {
     SelectionItem exist = itemMapper.selectById(itemId);
     if (exist == null) {
@@ -108,6 +112,7 @@ public class SelectionService {
   }
 
   /** 删除清单项 */
+  @Transactional
   public void deleteItem(Long itemId) {
     itemMapper.deleteById(itemId);
   }
@@ -163,7 +168,8 @@ public class SelectionService {
     }
   }
 
-  private void recalcTotal(SelectionItem item) {
+  /** 重算清单项小计 = 单价 × 数量（null 安全，缺省数量为 1）。 */
+  void recalcTotal(SelectionItem item) {
     BigDecimal unit = item.getUnitPrice() == null ? BigDecimal.ZERO : item.getUnitPrice();
     int qty = item.getQuantity() == null ? 1 : item.getQuantity();
     item.setQuantity(qty);
@@ -196,7 +202,8 @@ public class SelectionService {
         .toList();
   }
 
-  private BudgetGroupVO toGroup(String name, BigDecimal amount, BigDecimal spent) {
+  /** 组装预算分组：金额 + 占比百分比（HALF_UP 两位小数，花费为 0 时占比 0）。 */
+  BudgetGroupVO toGroup(String name, BigDecimal amount, BigDecimal spent) {
     BudgetGroupVO g = new BudgetGroupVO();
     g.setName(name);
     g.setAmount(amount);

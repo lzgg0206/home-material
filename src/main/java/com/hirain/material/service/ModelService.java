@@ -9,6 +9,7 @@ import com.hirain.material.entity.Model;
 import com.hirain.material.entity.ModelKeyword;
 import com.hirain.material.entity.ModelPitfall;
 import com.hirain.material.entity.ModelReputation;
+import com.hirain.material.enums.PitfallTypeEnum;
 import com.hirain.material.mapper.BrandMapper;
 import com.hirain.material.mapper.ModelKeywordMapper;
 import com.hirain.material.mapper.ModelMapper;
@@ -35,6 +36,15 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ModelService {
+
+  /** 相关推荐：同价位区间下限倍数。 */
+  private static final BigDecimal PRICE_RANGE_LOWER = new BigDecimal("0.7");
+
+  /** 相关推荐：同价位区间上限倍数。 */
+  private static final BigDecimal PRICE_RANGE_UPPER = new BigDecimal("1.3");
+
+  /** 相关推荐：同价位竞品最大条数。 */
+  private static final int RELATED_LIMIT = 5;
 
   @Autowired
   private ModelMapper modelMapper;
@@ -115,14 +125,14 @@ public class ModelService {
         Wrappers.<Model>lambdaQuery()
             .eq(Model::getCategoryId, model.getCategoryId())
             .ne(Model::getId, id)
-            .between(Model::getPrice, price.multiply(new BigDecimal("0.7")),
-                price.multiply(new BigDecimal("1.3")))
-            .last("LIMIT 5"))));
+            .between(Model::getPrice, price.multiply(PRICE_RANGE_LOWER),
+                price.multiply(PRICE_RANGE_UPPER))
+            .last("LIMIT " + RELATED_LIMIT))));
     return vo;
   }
 
   /** 踩坑按类型分组（保持查询时的高危置顶顺序） */
-  private List<PitfallGroupVO> groupPitfalls(List<ModelPitfall> pitfalls) {
+  List<PitfallGroupVO> groupPitfalls(List<ModelPitfall> pitfalls) {
     Map<String, List<ModelPitfall>> grouped = pitfalls.stream()
         .collect(Collectors.groupingBy(
             p -> p.getType() == null ? "other" : p.getType(),
@@ -162,23 +172,14 @@ public class ModelService {
     }).toList();
   }
 
-  private List<String> splitTags(String s) {
+  List<String> splitTags(String s) {
     if (StrUtil.isBlank(s)) {
       return List.of();
     }
     return Arrays.stream(s.split(",")).map(String::trim).filter(StrUtil::isNotBlank).toList();
   }
 
-  private String typeName(String type) {
-    if (type == null) {
-      return "其他";
-    }
-    return switch (type) {
-      case "quality" -> "质量问题";
-      case "install" -> "安装售后";
-      case "mismatch" -> "宣传不符";
-      case "experience" -> "使用体验";
-      default -> "其他";
-    };
+  String typeName(String type) {
+    return PitfallTypeEnum.fromCode(type).getDescription();
   }
 }

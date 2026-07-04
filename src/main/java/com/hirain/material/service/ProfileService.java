@@ -5,6 +5,7 @@ import com.hirain.material.entity.UserProfile;
 import com.hirain.material.mapper.UserProfileMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 家装档案业务（upsert）。
@@ -35,6 +36,7 @@ public class ProfileService {
    * @param profile 档案内容
    * @return 保存后的档案
    */
+  @Transactional
   public UserProfile save(UserProfile profile) {
     Long uid = authService.currentUser().getId();
     profile.setUserId(uid);

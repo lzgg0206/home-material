@@ -18,17 +18,28 @@ import com.hirain.material.vo.HomeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * 首页聚合业务：快捷品类 + 核心榜单 + 避坑精选。
  */
 @Service
 public class HomeService {
+
+  /** 首页核心榜单展示的一级品类ID（顺序即展示顺序）。 */
+  private static final List<Long> HOME_CATEGORY_IDS = List.of(1L, 3L, 5L);
+
+  /** 每个品类展示的 TOP N 品牌。 */
+  private static final int HOME_TOP_N = 3;
+
+  /** 今日避坑精选条数。 */
+  private static final int HOME_PITFALL_N = 3;
 
   @Autowired
   private CategoryMapper categoryMapper;
@@ -49,7 +60,6 @@ public class HomeService {
    */
   public HomeVO home() {
     HomeVO vo = new HomeVO();
-    // 快捷品类（高频二级品类）
     vo.setQuickCategories(categoryMapper.selectList(
             Wrappers.<Category>lambdaQuery().eq(Category::getLevel, 2).orderByAsc(Category::getSort))
         .stream().map(c -> {
@@ -57,28 +67,50 @@ public class HomeService {
           BeanUtil.copyProperties(c, t);
           return t;
         }).toList());
+    vo.setTopRankings(buildTopRankings());
+    vo.setDailyPitfalls(buildDailyPitfalls());
+    return vo;
+  }
 
-    // 核心榜单：硬装主材(1) / 厨卫(3) / 软装(5) 各 TOP3
-    List<CategoryRanking> rankings = new ArrayList<>();
-    for (Long cid : List.of(1L, 3L, 5L)) {
-      Category cat = categoryMapper.selectById(cid);
-      if (cat == null) {
-        continue;
-      }
-      List<Brand> top3 = brandMapper.selectList(Wrappers.<Brand>lambdaQuery()
-          .like(Brand::getMainCategoryIds, String.valueOf(cid))
-          .orderByDesc(Brand::getPraiseRate).last("LIMIT 3"));
-      CategoryRanking cr = new CategoryRanking();
-      cr.setCategoryId(cat.getId());
-      cr.setCategoryName(cat.getName());
-      cr.setTop3(toRanking(top3));
-      rankings.add(cr);
+  /**
+   * 核心榜单：批量查品类 + 一次查品牌，内存按品类精确匹配分组取 TOP_N。
+   * <p>不再按品类循环查库（消除 N+1），也不再对 mainCategoryIds 用 LIKE（避免 1 误匹配 10/11）。</p>
+   *
+   * @return 各品类 TOP 榜单
+   */
+  List<CategoryRanking> buildTopRankings() {
+    Map<Long, Category> categoryMap = categoryMapper.selectBatchIds(HOME_CATEGORY_IDS).stream()
+        .collect(Collectors.toMap(Category::getId, Function.identity()));
+    if (categoryMap.isEmpty()) {
+      return List.of();
     }
-    vo.setTopRankings(rankings);
+    List<Brand> brands = brandMapper.selectList(
+        Wrappers.<Brand>lambdaQuery().orderByDesc(Brand::getPraiseRate));
+    return HOME_CATEGORY_IDS.stream()
+        .map(categoryMap::get)
+        .filter(Objects::nonNull)
+        .map(c -> {
+          CategoryRanking cr = new CategoryRanking();
+          cr.setCategoryId(c.getId());
+          cr.setCategoryName(c.getName());
+          cr.setTop3(toRanking(brands.stream()
+              .filter(b -> belongsToCategory(b, c.getId()))
+              .limit(HOME_TOP_N)
+              .toList()));
+          return cr;
+        }).toList();
+  }
 
-    // 今日避坑精选（高危踩坑，批量补型号/品类名，避免 N+1）
+  /**
+   * 今日避坑精选（高危踩坑，批量补型号/品类名，避免 N+1）。
+   *
+   * @return 避坑卡片列表
+   */
+  List<HomePitfallVO> buildDailyPitfalls() {
     List<ModelPitfall> pits = pitfallMapper.selectList(Wrappers.<ModelPitfall>lambdaQuery()
-        .eq(ModelPitfall::getIsHighRisk, 1).orderByDesc(ModelPitfall::getCount).last("LIMIT 3"));
+        .eq(ModelPitfall::getIsHighRisk, 1)
+        .orderByDesc(ModelPitfall::getCount)
+        .last("LIMIT " + HOME_PITFALL_N));
     List<Long> modelIds = pits.stream().map(ModelPitfall::getModelId).distinct().toList();
     Map<Long, Model> modelMap = modelIds.isEmpty() ? Map.of()
         : modelMapper.selectBatchIds(modelIds).stream()
@@ -87,7 +119,7 @@ public class HomeService {
     Map<Long, Category> catMap = catIds.isEmpty() ? Map.of()
         : categoryMapper.selectBatchIds(catIds).stream()
         .collect(Collectors.toMap(Category::getId, Function.identity()));
-    vo.setDailyPitfalls(pits.stream().map(p -> {
+    return pits.stream().map(p -> {
       HomePitfallVO hp = new HomePitfallVO();
       hp.setModelId(p.getModelId());
       hp.setDescription(p.getDescription());
@@ -101,20 +133,40 @@ public class HomeService {
         }
       }
       return hp;
-    }).toList());
-    return vo;
+    }).toList();
   }
 
-  private List<BrandRankingVO> toRanking(List<Brand> brands) {
-    List<BrandRankingVO> list = new ArrayList<>();
-    int rank = 1;
-    for (Brand b : brands) {
-      BrandRankingVO r = new BrandRankingVO();
-      BeanUtil.copyProperties(b, r);
-      r.setBrandId(b.getId());
-      r.setRank(rank++);
-      list.add(r);
+  /**
+   * 品牌列表转排行榜 VO（rank 从 1 开始递增）。
+   *
+   * @param brands 已排序的品牌列表
+   * @return 带 rank 的排行榜
+   */
+  List<BrandRankingVO> toRanking(List<Brand> brands) {
+    return IntStream.range(0, brands.size())
+        .mapToObj(i -> {
+          Brand b = brands.get(i);
+          BrandRankingVO r = new BrandRankingVO();
+          BeanUtil.copyProperties(b, r);
+          r.setBrandId(b.getId());
+          r.setRank(i + 1);
+          return r;
+        }).toList();
+  }
+
+  /**
+   * 判断品牌主营品类是否包含指定品类ID（精确匹配，替代 LIKE 避免 1 误匹配 10/11）。
+   *
+   * @param brand 品牌
+   * @param cid   品类ID
+   * @return 是否主营该品类
+   */
+  boolean belongsToCategory(Brand brand, Long cid) {
+    String ids = brand.getMainCategoryIds();
+    if (ids == null || ids.isBlank()) {
+      return false;
     }
-    return list;
+    String key = String.valueOf(cid);
+    return Arrays.stream(ids.split(",")).map(String::trim).anyMatch(key::equals);
   }
 }
