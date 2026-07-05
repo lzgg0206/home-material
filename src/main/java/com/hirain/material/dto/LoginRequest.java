@@ -6,6 +6,8 @@ import lombok.Data;
 
 /**
  * Mock 登录请求（P0 联调用）。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "Mock 登录请求")

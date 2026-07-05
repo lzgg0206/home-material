@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 家装档案接口（C 端，需登录）。
+ * 提供当前用户家装档案的查询与保存，路径前缀 /api/profile。
+ *
+ * @author lingzhi.Wang
  */
 @Tag(name = "家装档案", description = "用户家装档案")
 @RestController

@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 
 /**
  * 品牌业务：多维度排行榜 + 品牌下型号。
+ *
+ * @author lingzhi.Wang
  */
 @Service
 public class BrandService {

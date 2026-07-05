@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
  * 微信 code2session 封装。
  *
  * <p>通过 {@code wx.login.mock} 开关在 Mock 与真实调用间切换，切换不改代码。</p>
+ *
+ * @author lingzhi.Wang
  */
 @Slf4j
 @Service

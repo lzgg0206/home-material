@@ -5,6 +5,8 @@ import lombok.Data;
 
 /**
  * 踩坑点。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "踩坑点")

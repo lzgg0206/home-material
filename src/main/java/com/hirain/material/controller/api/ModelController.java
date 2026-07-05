@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 型号接口（C 端）。
+ * 提供型号详情聚合查询，路径前缀 /api/model。
+ *
+ * @author lingzhi.Wang
  */
 @Tag(name = "型号", description = "型号详情聚合")
 @RestController

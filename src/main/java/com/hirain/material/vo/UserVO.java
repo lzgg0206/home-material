@@ -5,6 +5,8 @@ import lombok.Data;
 
 /**
  * 当前用户信息（脱敏视图，不含 openid/角色等内部字段）。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "当前用户信息")

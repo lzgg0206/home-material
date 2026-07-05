@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * B 端通用 CRUD 基类：分页 + 新增 + 修改 + 删除。
+ * 子类通过实现 {@link #mapper()} 提供对应 Mapper，即自动获得通用增删改查动作，路径前缀 /admin。
  *
  * @param <T> 实体类型
+ * @author lingzhi.Wang
  */
 public abstract class BaseAdminController<T extends BaseEntity> {
 

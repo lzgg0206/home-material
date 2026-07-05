@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 
 /**
  * 预算分组统计项。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "预算分组统计")

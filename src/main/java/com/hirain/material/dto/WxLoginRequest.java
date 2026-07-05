@@ -6,6 +6,8 @@ import lombok.Data;
 
 /**
  * 微信登录请求。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "微信登录请求")

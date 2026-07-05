@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * B 端 - 型号踩坑点管理。
+ * 继承通用 CRUD 基类，路径前缀 /admin/pitfall。
+ *
+ * @author lingzhi.Wang
  */
 @Tag(name = "B端-踩坑点")
 @RestController

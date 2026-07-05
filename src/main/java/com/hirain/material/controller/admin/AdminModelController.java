@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * B 端 - 型号管理。
+ * 继承通用 CRUD 基类，路径前缀 /admin/model。
+ *
+ * @author lingzhi.Wang
  */
 @Tag(name = "B端-型号")
 @RestController

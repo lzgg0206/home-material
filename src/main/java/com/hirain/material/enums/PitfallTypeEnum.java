@@ -5,6 +5,8 @@ import lombok.Getter;
 
 /**
  * 踩坑类型枚举。
+ *
+ * @author lingzhi.Wang
  */
 @Getter
 @AllArgsConstructor
@@ -16,7 +18,9 @@ public enum PitfallTypeEnum {
   EXPERIENCE("experience", "使用体验"),
   OTHER("other", "其他");
 
+  /** 类型编码 */
   private final String code;
+  /** 类型描述 */
   private final String description;
 
   /**

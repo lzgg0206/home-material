@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
  * 实体基类：主键 + 审计时间字段 + 逻辑删除。
  *
  * <p>createTime/updateTime 由 {@code MetaObjectHandler} 自动填充。</p>
+ *
+ * @author lingzhi.Wang
  */
 @Data
 public abstract class BaseEntity implements Serializable {

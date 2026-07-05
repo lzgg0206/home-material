@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * 微信小程序登录配置（application.yml 的 wx.login.*）。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Component
@@ -15,8 +17,10 @@ public class WxLoginProperties {
   /** true=Mock 模式（不调微信），false=真实 code2session */
   private boolean mock = true;
 
+  /** 微信小程序 AppID */
   private String appid;
 
+  /** 微信小程序 AppSecret */
   private String secret;
 
   /** code2session 请求超时（毫秒） */

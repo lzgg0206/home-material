@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * 品牌排行榜项。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "品牌排行榜项")

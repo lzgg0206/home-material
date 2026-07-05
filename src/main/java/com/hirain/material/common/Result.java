@@ -8,6 +8,7 @@ import java.io.Serializable;
  * 统一响应结构。
  *
  * @param <T> 业务数据类型
+ * @author lingzhi.Wang
  */
 @Data
 public class Result<T> implements Serializable {
@@ -25,6 +26,9 @@ public class Result<T> implements Serializable {
 
   /**
    * 成功（无数据）。
+   *
+   * @param <T> 业务数据类型
+   * @return 成功响应，data 为 null
    */
   public static <T> Result<T> success() {
     return success(null);
@@ -32,6 +36,10 @@ public class Result<T> implements Serializable {
 
   /**
    * 成功（带数据）。
+   *
+   * @param data 业务数据
+   * @param <T>  业务数据类型
+   * @return 成功响应，code=200
    */
   public static <T> Result<T> success(T data) {
     Result<T> r = new Result<>();
@@ -43,6 +51,10 @@ public class Result<T> implements Serializable {
 
   /**
    * 失败（默认 500）。
+   *
+   * @param message 提示信息
+   * @param <T>     业务数据类型
+   * @return 失败响应，code=500
    */
   public static <T> Result<T> fail(String message) {
     return fail(500, message);
@@ -50,6 +62,11 @@ public class Result<T> implements Serializable {
 
   /**
    * 失败（自定义码）。
+   *
+   * @param code    业务码
+   * @param message 提示信息
+   * @param <T>     业务数据类型
+   * @return 失败响应
    */
   public static <T> Result<T> fail(int code, String message) {
     Result<T> r = new Result<>();

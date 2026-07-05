@@ -5,6 +5,8 @@ import lombok.Data;
 
 /**
  * 口碑关键词。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "口碑关键词")

@@ -33,6 +33,8 @@ import java.util.stream.Collectors;
 
 /**
  * 型号业务：详情聚合（核心页面）。
+ *
+ * @author lingzhi.Wang
  */
 @Service
 public class ModelService {
@@ -131,7 +133,12 @@ public class ModelService {
     return vo;
   }
 
-  /** 踩坑按类型分组（保持查询时的高危置顶顺序） */
+  /**
+   * 踩坑按类型分组（保持查询时的高危置顶顺序）。
+   *
+   * @param pitfalls 已按高危置顶、频次降序排好的踩坑列表
+   * @return 按类型分组的踩坑卡片
+   */
   List<PitfallGroupVO> groupPitfalls(List<ModelPitfall> pitfalls) {
     Map<String, List<ModelPitfall>> grouped = pitfalls.stream()
         .collect(Collectors.groupingBy(
@@ -172,6 +179,12 @@ public class ModelService {
     }).toList();
   }
 
+  /**
+   * 拆分逗号分隔的标签字符串为列表（去除空白项）。
+   *
+   * @param s 逗号分隔的标签字符串
+   * @return 标签列表，空白入参返回空列表
+   */
   List<String> splitTags(String s) {
     if (StrUtil.isBlank(s)) {
       return List.of();
@@ -179,6 +192,12 @@ public class ModelService {
     return Arrays.stream(s.split(",")).map(String::trim).filter(StrUtil::isNotBlank).toList();
   }
 
+  /**
+   * 将踩坑类型编码转换为中文名称。
+   *
+   * @param type 踩坑类型编码
+   * @return 类型中文名称
+   */
   String typeName(String type) {
     return PitfallTypeEnum.fromCode(type).getDescription();
   }

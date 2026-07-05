@@ -5,6 +5,8 @@ import lombok.Data;
 
 /**
  * 品牌排行榜查询参数。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "品牌排行榜查询")

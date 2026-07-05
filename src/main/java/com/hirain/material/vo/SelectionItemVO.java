@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 
 /**
  * 清单项（含型号/品类名）。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "清单项")

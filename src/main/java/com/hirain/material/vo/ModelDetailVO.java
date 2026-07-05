@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * 型号详情聚合（型号详情页一次返回）。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "型号详情")

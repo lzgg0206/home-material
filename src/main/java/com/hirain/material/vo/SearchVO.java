@@ -7,6 +7,8 @@ import java.util.List;
 
 /**
  * 全局搜索结果（按品类/品牌/型号分类）。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "全局搜索结果")

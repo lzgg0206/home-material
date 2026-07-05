@@ -5,6 +5,8 @@ import lombok.Getter;
 
 /**
  * 清单项采购状态枚举。
+ *
+ * @author lingzhi.Wang
  */
 @Getter
 @AllArgsConstructor
@@ -14,7 +16,9 @@ public enum PurchaseStatusEnum {
   ORDERED("ordered", "已下单"),
   RECEIVED("received", "已收货");
 
+  /** 状态编码 */
   private final String code;
+  /** 状态描述 */
   private final String description;
 
   /**

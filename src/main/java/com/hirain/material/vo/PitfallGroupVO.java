@@ -7,6 +7,8 @@ import java.util.List;
 
 /**
  * 踩坑分组（按类型）。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "踩坑分组")

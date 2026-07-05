@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * B 端 - 品牌管理。
+ * 继承通用 CRUD 基类，路径前缀 /admin/brand。
+ *
+ * @author lingzhi.Wang
  */
 @Tag(name = "B端-品牌")
 @RestController

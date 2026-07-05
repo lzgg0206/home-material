@@ -5,6 +5,8 @@ import lombok.Data;
 
 /**
  * 登录响应。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "登录响应")

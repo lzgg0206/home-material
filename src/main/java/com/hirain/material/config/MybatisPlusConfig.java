@@ -11,11 +11,17 @@ import java.time.LocalDateTime;
 
 /**
  * MyBatis-Plus 配置：分页插件 + 审计字段自动填充。
+ *
+ * @author lingzhi.Wang
  */
 @Configuration
 public class MybatisPlusConfig {
 
-  /** 分页插件，单页上限 1000 防止误查全表 */
+  /**
+   * 分页拦截器，单页上限 1000 防止误查全表。
+   *
+   * @return MyBatis-Plus 拦截器
+   */
   @Bean
   public MybatisPlusInterceptor mybatisPlusInterceptor() {
     MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
@@ -25,16 +31,30 @@ public class MybatisPlusConfig {
     return interceptor;
   }
 
-  /** 自动填充 createTime / updateTime */
+  /**
+   * 审计字段自动填充处理器，insertFill 填充 createTime/updateTime，updateFill 填充 updateTime。
+   *
+   * @return MetaObjectHandler 实例
+   */
   @Bean
   public MetaObjectHandler metaObjectHandler() {
     return new MetaObjectHandler() {
+      /**
+       * 插入时填充 createTime 与 updateTime。
+       *
+       * @param metaObject MyBatis 元对象
+       */
       @Override
       public void insertFill(MetaObject metaObject) {
         this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
         this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
       }
 
+      /**
+       * 更新时填充 updateTime。
+       *
+       * @param metaObject MyBatis 元对象
+       */
       @Override
       public void updateFill(MetaObject metaObject) {
         this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());

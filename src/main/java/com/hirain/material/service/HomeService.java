@@ -28,6 +28,8 @@ import java.util.stream.IntStream;
 
 /**
  * 首页聚合业务：快捷品类 + 核心榜单 + 避坑精选。
+ *
+ * @author lingzhi.Wang
  */
 @Service
 public class HomeService {

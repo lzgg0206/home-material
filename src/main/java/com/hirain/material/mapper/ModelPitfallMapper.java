@@ -4,7 +4,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hirain.material.entity.ModelPitfall;
 import org.apache.ibatis.annotations.Mapper;
 
-/** 型号踩坑点 Mapper */
+/**
+ * 型号踩坑点表数据访问。
+ *
+ * @author lingzhi.Wang
+ */
 @Mapper
 public interface ModelPitfallMapper extends BaseMapper<ModelPitfall> {
 }

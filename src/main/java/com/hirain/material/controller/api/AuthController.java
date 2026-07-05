@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 认证接口（C 端）。
+ * 提供 Mock 登录、微信登录与当前用户查询，路径前缀 /api/auth。
+ *
+ * @author lingzhi.Wang
  */
 @Tag(name = "认证", description = "登录与当前用户")
 @RestController

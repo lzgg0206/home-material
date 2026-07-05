@@ -7,13 +7,17 @@ import lombok.EqualsAndHashCode;
 
 /**
  * 热门搜索词。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("hm_hot_keyword")
 public class HotKeyword extends BaseEntity {
 
+  /** 热搜词 */
   private String keyword;
 
+  /** 搜索次数 */
   private Integer searchCount;
 }

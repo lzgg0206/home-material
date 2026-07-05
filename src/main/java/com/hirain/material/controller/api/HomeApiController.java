@@ -15,6 +15,9 @@ import java.util.Map;
 
 /**
  * 首页与健康检查接口（C 端）。
+ * 提供首页聚合数据与服务健康检查，路径前缀 /api/home。
+ *
+ * @author lingzhi.Wang
  */
 @Tag(name = "首页", description = "首页聚合与健康检查")
 @RestController

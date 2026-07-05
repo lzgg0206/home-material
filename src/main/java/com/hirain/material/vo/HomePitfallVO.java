@@ -5,6 +5,8 @@ import lombok.Data;
 
 /**
  * 首页避坑精选项。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "避坑精选项")

@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 
 /**
  * 型号简要信息。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "型号简要")

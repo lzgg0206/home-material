@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 认证业务：Mock 登录 + 微信登录 + 当前用户。
+ *
+ * @author lingzhi.Wang
  */
 @Service
 public class AuthService {

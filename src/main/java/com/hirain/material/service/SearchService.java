@@ -19,6 +19,8 @@ import java.util.List;
 
 /**
  * 搜索业务：全局搜索 + 热搜词。
+ *
+ * @author lingzhi.Wang
  */
 @Service
 public class SearchService {

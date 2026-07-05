@@ -15,6 +15,9 @@ import java.util.List;
 
 /**
  * 搜索接口（C 端）。
+ * 提供全局搜索与热门搜索词查询，路径前缀 /api/search。
+ *
+ * @author lingzhi.Wang
  */
 @Tag(name = "搜索", description = "全局搜索与热搜")
 @RestController

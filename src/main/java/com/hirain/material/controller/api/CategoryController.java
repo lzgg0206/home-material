@@ -14,6 +14,9 @@ import java.util.List;
 
 /**
  * 品类接口（C 端）。
+ * 提供品类树查询，路径前缀 /api/category。
+ *
+ * @author lingzhi.Wang
  */
 @Tag(name = "品类", description = "品类树与分类")
 @RestController

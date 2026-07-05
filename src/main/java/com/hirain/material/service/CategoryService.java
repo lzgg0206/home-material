@@ -13,7 +13,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 品类业务。
+ * 品类业务：品类树构建。
+ *
+ * @author lingzhi.Wang
  */
 @Service
 public class CategoryService {

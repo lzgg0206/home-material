@@ -10,10 +10,17 @@ import org.springframework.context.annotation.Configuration;
  * Knife4j / OpenAPI 文档配置。
  *
  * <p>访问入口：{@code http://localhost:8090/doc.html}</p>
+ *
+ * @author lingzhi.Wang
  */
 @Configuration
 public class Knife4jConfig {
 
+  /**
+   * 构建 OpenAPI 文档元信息。
+   *
+   * @return OpenAPI 实例
+   */
   @Bean
   public OpenAPI openAPI() {
     return new OpenAPI()

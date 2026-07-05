@@ -5,6 +5,8 @@ import lombok.Getter;
 
 /**
  * 用户角色枚举。
+ *
+ * @author lingzhi.Wang
  */
 @Getter
 @AllArgsConstructor
@@ -13,7 +15,9 @@ public enum UserRoleEnum {
   USER(0, "普通用户"),
   ADMIN(1, "管理员");
 
+  /** 角色编码 */
   private final Integer code;
+  /** 角色描述 */
   private final String description;
 
   /**

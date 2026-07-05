@@ -5,6 +5,8 @@ import lombok.Data;
 
 /**
  * 搜索结果项。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "搜索结果项")

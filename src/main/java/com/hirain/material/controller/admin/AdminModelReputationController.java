@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * B 端 - 型号口碑聚合管理。
+ * 继承通用 CRUD 基类，路径前缀 /admin/reputation。
+ *
+ * @author lingzhi.Wang
  */
 @Tag(name = "B端-口碑聚合")
 @RestController

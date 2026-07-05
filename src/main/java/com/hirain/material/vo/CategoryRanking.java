@@ -7,6 +7,8 @@ import java.util.List;
 
 /**
  * 首页品类榜单（某品类下 TOP3 品牌）。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "品类榜单")

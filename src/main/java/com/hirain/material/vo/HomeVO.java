@@ -7,6 +7,8 @@ import java.util.List;
 
 /**
  * 首页聚合结果。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "首页聚合")

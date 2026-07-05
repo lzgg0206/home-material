@@ -19,6 +19,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
  * 品牌接口（C 端）。
+ * 提供品牌排行榜与品牌下型号列表查询，路径前缀 /api/brand。
+ *
+ * @author lingzhi.Wang
  */
 @Tag(name = "品牌", description = "品牌排行榜与品牌下型号")
 @RestController

@@ -7,6 +7,8 @@ import java.util.List;
 
 /**
  * 品类树节点。
+ *
+ * @author lingzhi.Wang
  */
 @Data
 @Schema(description = "品类树节点")
