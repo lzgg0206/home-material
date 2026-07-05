@@ -18,4 +18,7 @@ public class WxLoginProperties {
   private String appid;
 
   private String secret;
+
+  /** code2session 请求超时（毫秒） */
+  private int timeout = 5000;
 }

@@ -44,7 +44,13 @@ public class WxLoginService {
         .replace("{appid}", props.getAppid())
         .replace("{secret}", props.getSecret())
         .replace("{code}", code);
-    String resp = HttpUtil.get(url, 5000);
+    String resp;
+    try {
+      resp = HttpUtil.get(url, props.getTimeout());
+    } catch (Exception e) {
+      log.error("调用微信 code2session 失败 code={}", code, e);
+      throw new BizException("微信服务繁忙，请稍后重试");
+    }
     JSONObject json = JSONUtil.parseObj(resp);
     Integer errcode = json.getInt("errcode");
     if (errcode != null && errcode != 0) {

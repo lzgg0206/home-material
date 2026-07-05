@@ -6,6 +6,7 @@ import com.hirain.material.dto.WxLoginRequest;
 import com.hirain.material.entity.User;
 import com.hirain.material.service.AuthService;
 import com.hirain.material.vo.LoginVO;
+import com.hirain.material.vo.UserVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -58,7 +59,7 @@ public class AuthController {
    */
   @Operation(summary = "当前用户")
   @GetMapping("/me")
-  public Result<User> me() {
-    return Result.success(authService.currentUser());
+  public Result<UserVO> me() {
+    return Result.success(authService.currentUserVO());
   }
 }

@@ -1,10 +1,12 @@
 package com.hirain.material.service;
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.hirain.material.entity.User;
 import com.hirain.material.mapper.UserMapper;
 import com.hirain.material.vo.LoginVO;
+import com.hirain.material.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +54,17 @@ public class AuthService {
   public User currentUser() {
     long uid = StpUtil.getLoginIdAsLong();
     return userMapper.selectById(uid);
+  }
+
+  /**
+   * 获取当前登录用户（脱敏 VO，不含 openid/角色等内部字段）。
+   *
+   * @return 当前用户 VO
+   */
+  public UserVO currentUserVO() {
+    UserVO vo = new UserVO();
+    BeanUtil.copyProperties(currentUser(), vo);
+    return vo;
   }
 
   private User getOrCreate(String openid) {

@@ -1,5 +1,12 @@
-// 后端基地址：H5 走 devServer proxy；微信小程序生产改为已备案 https 域名
+// 后端基地址：
+// - H5：走 devServer proxy（/api → localhost:8090），见 manifest.json
+// - 微信小程序：必须是已备案的完整 https 域名，并在小程序后台「开发设置-服务器域名」配为 request 合法域名
+// #ifdef MP-WEIXIN
+const BASE_URL = 'https://your-domain.com/api' // TODO: 替换为已备案的小程序合法域名
+// #endif
+// #ifndef MP-WEIXIN
 const BASE_URL = '/api'
+// #endif
 
 /**
  * 统一请求封装，对齐后端 Result {code,message,data}。
