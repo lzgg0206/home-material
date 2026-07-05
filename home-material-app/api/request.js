@@ -5,7 +5,8 @@
 const BASE_URL = 'https://your-domain.com/api' // TODO: 替换为已备案的小程序合法域名
 // #endif
 // #ifndef MP-WEIXIN
-const BASE_URL = '/api'
+// H5 开发直连后端（后端 CorsConfig 已放开跨域）；生产部署改回 '/api' 走 nginx 反代
+const BASE_URL = 'http://localhost:8090/api'
 // #endif
 
 /**
