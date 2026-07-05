@@ -30,8 +30,11 @@ public class SaTokenConfig implements WebMvcConfigurer {
               "/api/auth/login",
               "/api/auth/wx-login"
           ).check(r -> StpUtil.checkLogin());
-      // B 端：全部需登录
-      SaRouter.match("/admin/**").check(r -> StpUtil.checkLogin());
+      // B 端：需登录且具备管理员角色（StpInterfaceImpl 按用户 role 放行）
+      SaRouter.match("/admin/**").check(r -> {
+        StpUtil.checkLogin();
+        StpUtil.checkRole("admin");
+      });
     })).addPathPatterns("/**")
         .excludePathPatterns(
             "/doc.html", "/swagger-ui.html", "/v3/api-docs/**",

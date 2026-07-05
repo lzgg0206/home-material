@@ -107,9 +107,9 @@ java -jar home-material.jar \
 - Token 字段：HTTP 头 `Authorization`
 - 有效期：30 天
 - `/api/**`：个人域（部分接口白名单，如首页、品类、搜索；清单/档案需登录）
-- `/admin/**`：管理域，需登录
+- `/admin/**`：管理域，需登录且具备管理员角色（`hm_user.role=1`，普通用户访问返回 403）
 
-> ⚠️ 当前 `/admin/**` 仅校验登录、未校验角色，正式上线前需补角色拦截。
+> 管理员账号：mock-data 预置 `admin_openid_001`（role=1），本地可用它走 `/api/auth/login` 拿 token 后访问 B 端。
 
 ## 接口文档
 

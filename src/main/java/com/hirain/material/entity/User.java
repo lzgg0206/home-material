@@ -20,4 +20,7 @@ public class User extends BaseEntity {
   private String phone;
 
   private String avatar;
+
+  /** 角色：0普通用户 1管理员 */
+  private Integer role;
 }

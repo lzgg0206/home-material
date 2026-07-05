@@ -101,8 +101,9 @@ INSERT INTO `hm_model_pitfall` (`model_id`,`type`,`description`,`count`,`is_high
 (260,'experience','真皮保养麻烦',16,0,'定期用皮革护理剂，避免阳光直射与尖锐物');
 
 -- ---------- 测试用户 + 档案 + 清单 ----------
-INSERT INTO `hm_user` (`id`,`openid`,`nickname`,`phone`) VALUES
-(1,'test_openid_001','测试业主','13800000000');
+INSERT INTO `hm_user` (`id`,`openid`,`nickname`,`phone`,`role`) VALUES
+(1,'test_openid_001','测试业主','13800000000',0),
+(2,'admin_openid_001','管理员','13800000001',1);
 
 INSERT INTO `hm_user_profile` (`user_id`,`city`,`area`,`layout`,`house_type`,`stage`,`style`,`decorate_way`,`total_budget`,`preference`) VALUES
 (1,'上海',96.00,'三室两厅','新房','硬装阶段','现代简约','半包',180000.00,'性价比,环保,耐用');

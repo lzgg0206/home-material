@@ -1,6 +1,7 @@
 package com.hirain.material.common;
 
 import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotRoleException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,6 +28,12 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(NotLoginException.class)
   public Result<?> handleNotLogin(NotLoginException e) {
     return Result.fail(401, "未登录或登录已过期");
+  }
+
+  /** 权限/角色不足 */
+  @ExceptionHandler(NotRoleException.class)
+  public Result<?> handleNotRole(NotRoleException e) {
+    return Result.fail(403, "权限不足");
   }
 
   /** @RequestBody 参数校验失败 */
