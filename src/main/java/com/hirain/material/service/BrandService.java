@@ -14,7 +14,9 @@ import com.hirain.material.mapper.ModelMapper;
 import com.hirain.material.mapper.ModelReputationMapper;
 import com.hirain.material.vo.BrandRankingVO;
 import com.hirain.material.vo.ModelSimpleVO;
+import com.hirain.material.config.CacheConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -53,6 +55,8 @@ public class BrandService {
    * @param q 查询参数
    * @return 排行榜分页
    */
+  @Cacheable(value = CacheConfig.BRAND_RANKING,
+      key = "#q.categoryId + '_' + #q.dimension + '_' + #q.origin + '_' + #q.priceRange + '_' + #q.page + '_' + #q.size")
   public Page<BrandRankingVO> ranking(BrandRankingQuery q) {
     Page<Brand> page = new Page<>(q.getPage(), q.getSize());
     String cid = q.getCategoryId() == null ? null : String.valueOf(q.getCategoryId());

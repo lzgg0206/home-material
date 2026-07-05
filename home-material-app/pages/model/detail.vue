@@ -34,6 +34,10 @@
         </view>
       </view>
     </view>
+
+    <view class="section disclaimer">
+      <text class="disclaimer-text">数据由 AI 整理，仅供参考。选购请以实物与官方信息为准。</text>
+    </view>
   </view>
 
   <view v-else class="container">
@@ -98,4 +102,6 @@ onLoad((q) => {
   margin-right: 8rpx;
   font-weight: 500;
 }
+.disclaimer { text-align: center; padding: 16rpx 24rpx; }
+.disclaimer-text { font-size: 24rpx; color: var(--color-text-placeholder); line-height: 1.5; }
 </style>

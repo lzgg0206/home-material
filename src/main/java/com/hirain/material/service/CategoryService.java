@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.hirain.material.entity.Category;
 import com.hirain.material.mapper.CategoryMapper;
 import com.hirain.material.vo.CategoryTreeVO;
+import com.hirain.material.config.CacheConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +33,7 @@ public class CategoryService {
    *
    * @return 一级品类树
    */
+  @Cacheable(value = CacheConfig.CATEGORY_TREE, key = "'tree'")
   public List<CategoryTreeVO> getTree() {
     List<Category> all = categoryMapper.selectList(
         Wrappers.<Category>lambdaQuery().orderByAsc(Category::getSort));

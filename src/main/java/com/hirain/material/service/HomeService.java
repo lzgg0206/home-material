@@ -15,7 +15,9 @@ import com.hirain.material.vo.CategoryRanking;
 import com.hirain.material.vo.CategoryTreeVO;
 import com.hirain.material.vo.HomePitfallVO;
 import com.hirain.material.vo.HomeVO;
+import com.hirain.material.config.CacheConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -60,6 +62,7 @@ public class HomeService {
    *
    * @return 首页数据
    */
+  @Cacheable(value = CacheConfig.HOME, key = "'home'")
   public HomeVO home() {
     HomeVO vo = new HomeVO();
     vo.setQuickCategories(categoryMapper.selectList(
