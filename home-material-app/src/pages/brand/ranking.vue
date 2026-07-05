@@ -38,7 +38,9 @@ const categoryId = ref(null)
 const load = async () => {
   if (!categoryId.value) return
   try {
-    list.value = await getBrandRanking({ categoryId: categoryId.value, dimension: curDim.value.key })
+    const res = await getBrandRanking({ categoryId: categoryId.value, dimension: curDim.value.key })
+    // 后端返回 Page 对象，品牌列表在 records 里
+    list.value = (res && res.records) || []
   } catch (e) {}
 }
 const onDim = (e) => { curDim.value = dimensions[e.detail.value]; load() }

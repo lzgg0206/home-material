@@ -14,7 +14,7 @@
 
     <view v-for="r in home.topRankings" :key="r.categoryId" class="section">
       <view class="title">{{ r.categoryName }} TOP3</view>
-      <view v-for="b in r.top3" :key="b.brandId" class="brand-card tap" @click="goModel(b.brandId)">
+      <view v-for="b in r.top3" :key="b.brandId" class="brand-card tap" @click="goCategory(r.categoryId)">
         <text :class="['rank', 'rank-' + b.rank]">{{ b.rank }}</text>
         <view class="brand-info">
           <text class="brand-name">{{ b.name }}</text>

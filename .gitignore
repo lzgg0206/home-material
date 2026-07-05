@@ -40,3 +40,5 @@ logs/
 home-material-app/node_modules/
 home-material-app/unpackage/
 home-material-app/dist/
+home-material-app/.vite/
+home-material-app/project.private.config.json

@@ -2,11 +2,12 @@
 // - H5：走 devServer proxy（/api → localhost:8090），见 manifest.json
 // - 微信小程序：必须是已备案的完整 https 域名，并在小程序后台「开发设置-服务器域名」配为 request 合法域名
 // #ifdef MP-WEIXIN
-const BASE_URL = 'https://your-domain.com/api' // TODO: 替换为已备案的小程序合法域名
+// 本地调试直连后端（微信开发者工具需勾"详情→本地设置→不校验合法域名"）；上线改回已备案 https 域名
+const BASE_URL = 'http://127.0.0.1:8090/api'
 // #endif
 // #ifndef MP-WEIXIN
 // H5 开发直连后端（后端 CorsConfig 已放开跨域）；生产部署改回 '/api' 走 nginx 反代
-const BASE_URL = 'http://localhost:8090/api'
+const BASE_URL = 'http://127.0.0.1:8090/api'
 // #endif
 
 /**
