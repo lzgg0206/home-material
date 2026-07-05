@@ -83,27 +83,27 @@ class HomeServiceTest {
 
   @Test
   void buildTopRankings_groupsByCategoryAndKeepsDeclaredOrder() {
-    // selectBatchIds 不保证顺序，模拟乱序返回，验证按 HOME_CATEGORY_IDS=[1,3,5] 排序输出
+    // selectBatchIds 不保证顺序，模拟乱序返回，验证按 HOME_CATEGORY_IDS=[10,13,16] 排序输出
     when(categoryMapper.selectBatchIds(anyList())).thenReturn(List.of(
-        category(5L, "软装"), category(1L, "硬装主材"), category(3L, "厨卫")));
-    // b2 的 mainCategoryIds="1,10" 必须归入 cid=1 组（不被 LIKE 误判，也不丢）
+        category(16L, "沙发"), category(10L, "瓷砖"), category(13L, "橱柜")));
+    // B 的 mainCategoryIds="10,13" 应同时归入瓷砖组和橱柜组（精确匹配，不丢不误判）
     when(brandMapper.selectList(any())).thenReturn(List.of(
-        brandOf("A", "1", new BigDecimal("99")),
-        brandOf("B", "1,10", new BigDecimal("90")),
-        brandOf("C", "3", new BigDecimal("80"))));
+        brandOf("东鹏", "10", new BigDecimal("99")),
+        brandOf("诺贝尔", "10,13", new BigDecimal("90")),
+        brandOf("A家", "13", new BigDecimal("80"))));
 
     List<CategoryRanking> r = service.buildTopRankings();
 
     assertEquals(3, r.size());
-    assertEquals("硬装主材", r.get(0).getCategoryName());
-    assertEquals("厨卫", r.get(1).getCategoryName());
-    assertEquals("软装", r.get(2).getCategoryName());
-    // cid=1 组两条（A、B），rank 从 1 开始
+    assertEquals("瓷砖", r.get(0).getCategoryName());
+    assertEquals("橱柜", r.get(1).getCategoryName());
+    assertEquals("沙发", r.get(2).getCategoryName());
+    // cid=10 瓷砖组两条（东鹏、诺贝尔），rank 从 1 开始
     assertEquals(2, r.get(0).getTop3().size());
     assertEquals(1, r.get(0).getTop3().get(0).getRank());
     assertEquals(2, r.get(0).getTop3().get(1).getRank());
-    // cid=3 组一条，cid=5 组空
-    assertEquals(1, r.get(1).getTop3().size());
+    // cid=13 橱柜组两条（诺贝尔、A家），cid=16 沙发组空
+    assertEquals(2, r.get(1).getTop3().size());
     assertTrue(r.get(2).getTop3().isEmpty());
   }
 

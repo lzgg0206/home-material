@@ -34,8 +34,8 @@ import java.util.stream.IntStream;
 @Service
 public class HomeService {
 
-  /** 首页核心榜单展示的一级品类ID（顺序即展示顺序）。 */
-  private static final List<Long> HOME_CATEGORY_IDS = List.of(1L, 3L, 5L);
+  /** 首页核心榜单展示的品类ID（热门二级品类，覆盖硬装/厨卫/软装；顺序即展示顺序）。 */
+  private static final List<Long> HOME_CATEGORY_IDS = List.of(10L, 13L, 16L);
 
   /** 每个品类展示的 TOP N 品牌。 */
   private static final int HOME_TOP_N = 3;
