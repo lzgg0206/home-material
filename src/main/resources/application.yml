@@ -69,6 +69,7 @@ ai:
   model: ${AI_MODEL:zhipuai/glm-4.5}
   timeout: 60000
   web-search: true
+  strict-schema: true
   temperature: 0.7
   default-city: 全国
   preload-category-ids: [10, 13, 16]

@@ -1,5 +1,6 @@
 package com.hirain.material.service;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 大模型客户端：OpenAI 兼容（默认硅基流动）+ 智谱 GLM 联网搜索工具。
+ * 大模型客户端：OpenAI 兼容（默认硅基流动）+ 智谱 GLM 联网搜索 + JSON Schema 强约束。
  *
  * <p>照抄 {@link WxLoginService} 的 Mock 开关范式，Hutool 一把梭，零新依赖。
  * 城市等上下文由调用方拼进 userPrompt，本类只负责收发与解析。</p>
@@ -35,14 +36,15 @@ public class LlmClient {
    *
    * @param systemPrompt 系统提示
    * @param userPrompt   用户提示（应包含城市/品类等上下文）
+   * @param schemaJson   期望输出的 JSON Schema；非空且开启 strictSchema 时走 json_schema 强约束
    * @return 模型回复内容
    */
-  public String chatJson(String systemPrompt, String userPrompt) {
+  public String chatJson(String systemPrompt, String userPrompt, String schemaJson) {
     if (props.isMock()) {
       log.warn("[Mock大模型] 返回占位 JSON，生产关闭 ai.mock");
       return mockBrandJson();
     }
-    Map<String, Object> body = buildRequestBody(systemPrompt, userPrompt);
+    Map<String, Object> body = buildRequestBody(systemPrompt, userPrompt, schemaJson);
     String resp;
     try {
       resp = HttpRequest.post(props.getBaseUrl() + props.getChatPath())
@@ -60,14 +62,14 @@ public class LlmClient {
   }
 
   /**
-   * 构造 OpenAI 兼容请求体（JSON 模式 + 智谱 web_search 联网工具）。
+   * 构造 OpenAI 兼容请求体（JSON Schema 强约束 + 智谱 web_search 联网工具）。
    */
-  private Map<String, Object> buildRequestBody(String systemPrompt, String userPrompt) {
+  private Map<String, Object> buildRequestBody(String systemPrompt, String userPrompt, String schemaJson) {
     Map<String, Object> body = new HashMap<>();
     body.put("model", props.getModel());
     body.put("temperature", props.getTemperature());
     body.put("stream", false);
-    body.put("response_format", Map.of("type", "json_object"));
+    body.put("response_format", buildResponseFormat(schemaJson));
     List<Map<String, String>> messages = new ArrayList<>();
     messages.add(Map.of("role", "system", "content", systemPrompt));
     messages.add(Map.of("role", "user", "content", userPrompt));
@@ -78,6 +80,22 @@ public class LlmClient {
           "web_search", Map.of("enable", true))));
     }
     return body;
+  }
+
+  /**
+   * strictSchema 开启且给定 schema 时下发 json_schema（strict:true，模型必须遵守）；
+   * 否则降级为 json_object，靠调用方容错解析兜底。
+   */
+  private Map<String, Object> buildResponseFormat(String schemaJson) {
+    if (props.isStrictSchema() && StrUtil.isNotBlank(schemaJson)) {
+      return Map.of(
+          "type", "json_schema",
+          "json_schema", Map.of(
+              "name", "brand_ranking",
+              "schema", JSONUtil.parseObj(schemaJson),
+              "strict", true));
+    }
+    return Map.of("type", "json_object");
   }
 
   /**
@@ -97,7 +115,7 @@ public class LlmClient {
   }
 
   /**
-   * Mock 占位 JSON，结构与真实返回一致（{brands:[...]}）。
+   * Mock 占位 JSON，结构与 schema 一致（含 highlight）。
    */
   private String mockBrandJson() {
     return """

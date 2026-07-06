@@ -48,4 +48,7 @@ public class AiProperties {
 
   /** 定时预热覆盖的品类ID集合 */
   private List<Long> preloadCategoryIds = List.of(10L, 13L, 16L);
+
+  /** 是否用 json_schema 强约束大模型输出（智谱 GLM 原生支持，关闭则降级 json_object） */
+  private boolean strictSchema = true;
 }

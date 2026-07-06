@@ -11,6 +11,7 @@
       <view class="info">
         <view class="brand-name">{{ b.name }} <text class="meta">· {{ (b.tags || []).join(' / ') }}</text></view>
         <view class="meta">好评 {{ b.praiseRate }}% · ¥{{ b.priceMin }}-{{ b.priceMax }} · 踩坑 {{ b.pitfallCount }}</view>
+        <view class="highlight" v-if="b.highlight">💡 {{ b.highlight }}</view>
       </view>
     </view>
     <view v-if="!list.length" class="empty">
@@ -66,4 +67,5 @@ onLoad((q) => { categoryId.value = (q && q.categoryId) || null; load() })
 .rank-3 { background: #d48806; }
 .info { flex: 1; }
 .brand-name { font-size: 30rpx; font-weight: 500; }
+.highlight { margin-top: 8rpx; font-size: 24rpx; color: #ff4d6d; line-height: 1.4; }
 </style>

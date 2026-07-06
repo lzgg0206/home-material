@@ -47,4 +47,7 @@ public class BrandRankingVO {
 
   @Schema(description = "核心标签")
   private List<String> tags;
+
+  @Schema(description = "小红书口碑亮点（AI 生成，一句话；静态库数据为空）")
+  private String highlight;
 }

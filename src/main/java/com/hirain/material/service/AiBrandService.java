@@ -5,6 +5,7 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.hirain.material.config.AiBrandSchema;
 import com.hirain.material.config.AiProperties;
 import com.hirain.material.config.CacheConfig;
 import com.hirain.material.entity.BrandAiRanking;
@@ -24,7 +25,8 @@ import java.util.List;
  * AI 品牌榜单：调大模型生成 + 落库 + 读取。
  *
  * <p>按 {@code (city, categoryId, dimension)} 三元组异步预热入库，前端读库读缓存。
- * 大模型慢调用隔离在后台，失败不影响 C 端——{@code BrandService} 有静态数据兜底。</p>
+ * 大模型走 {@link AiBrandSchema#BRAND_RANKING} 强约束输出，固定结构；慢调用隔离在后台，
+ * 失败不影响 C 端——{@code BrandService} 有静态数据兜底。</p>
  *
  * @author lingzhi.Wang
  */
@@ -80,7 +82,8 @@ public class AiBrandService {
    */
   public void sync(String city, Long categoryId, String dimension) {
     try {
-      String content = llmClient.chatJson(systemPrompt(), buildPrompt(city, categoryId, dimension));
+      String content = llmClient.chatJson(systemPrompt(),
+          buildPrompt(city, categoryId, dimension), AiBrandSchema.BRAND_RANKING);
       String clean = stripJson(content);
       List<BrandRankingVO> brands = parseBrands(clean);
       if (brands.isEmpty()) {
@@ -122,10 +125,10 @@ public class AiBrandService {
   private String systemPrompt() {
     return "你是家装建材行业的小红书口碑分析师。根据用户给定的城市与品类，"
         + "结合小红书最新真实用户测评与笔记，输出该城市该品类下最受认可的品牌口碑榜单。"
-        + "必须且只能返回 JSON，结构为 {\"brands\":[...]}，数组内每个元素字段："
-        + "name(品牌名), origin(domestic或imported), tier(high/mid/entry), "
+        + "严格按给定 JSON Schema 输出，brands 数组内每个品牌字段："
+        + "name(品牌名), origin(domestic/imported), tier(high/mid/entry), "
         + "praiseRate(0-100数字), pitfallCount(整数), priceMin(数字), priceMax(数字), "
-        + "tags(2-4个中文标签字符串数组), highlight(一句话小红书口碑亮点)。"
+        + "tags(2-4个中文标签数组), highlight(一句小红书口碑亮点)。"
         + "按所给维度排序，给出 10-15 个品牌，不要输出 JSON 以外的任何文字。";
   }
 
@@ -171,6 +174,7 @@ public class AiBrandService {
         vo.setPitfallCount(b.getInt("pitfallCount"));
         vo.setPriceMin(toBd(b.get("priceMin")));
         vo.setPriceMax(toBd(b.get("priceMax")));
+        vo.setHighlight(b.getStr("highlight"));
         JSONArray tags = b.getJSONArray("tags");
         if (tags != null) {
           vo.setTags(tags.toList(String.class));
