@@ -49,6 +49,22 @@ CREATE TABLE `hm_brand` (
   KEY `idx_tier` (`tier`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='品牌基础信息库';
 
+-- ---------- AI 品牌榜单快照（大模型生成，按 城市×品类×维度 落库） ----------
+DROP TABLE IF EXISTS `hm_brand_ai_ranking`;
+CREATE TABLE `hm_brand_ai_ranking` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `city` VARCHAR(32) NOT NULL COMMENT '城市(全国为兜底)',
+  `category_id` BIGINT NOT NULL COMMENT '品类ID',
+  `dimension` VARCHAR(32) NOT NULL DEFAULT 'overall' COMMENT '维度 overall/cost/highend/lowpitfall/eco',
+  `brands_json` TEXT COMMENT 'LLM生成的品牌列表JSON({brands:[...]})',
+  `model` VARCHAR(64) DEFAULT NULL COMMENT '生成使用的模型名',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deleted` TINYINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_city_cat_dim` (`city`, `category_id`, `dimension`, `deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='AI品牌榜单快照';
+
 -- ---------- F008 型号 ----------
 DROP TABLE IF EXISTS `hm_model`;
 CREATE TABLE `hm_model` (

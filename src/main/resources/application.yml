@@ -59,3 +59,16 @@ wx:
     mock: true
     appid: your-appid
     secret: your-secret
+
+# AI 大模型配置（硅基流动 OpenAI 兼容网关，默认 Mock；生产通过环境变量覆盖）
+ai:
+  mock: true
+  base-url: https://api.siliconflow.cn/v1
+  chat-path: /chat/completions
+  api-key: ${AI_API_KEY:your-siliconflow-key}
+  model: ${AI_MODEL:zhipuai/glm-4.5}
+  timeout: 60000
+  web-search: true
+  temperature: 0.7
+  default-city: 全国
+  preload-category-ids: [10, 13, 16]
